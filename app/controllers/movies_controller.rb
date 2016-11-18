@@ -1,4 +1,7 @@
 class MoviesController < ApplicationController
+
+  before_action :authenticate
+
   def index
     @movies = Movie.all
   end
@@ -26,6 +29,9 @@ class MoviesController < ApplicationController
   end
 
   def authenticate
+    authenticate_or_request_with_http_token do |token, options|
+      User.find_by(auth_token: token)
+    end
 
   end
 
