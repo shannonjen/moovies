@@ -25,6 +25,10 @@ class MoviesController < ApplicationController
     end
   end
 
+  def authenticate
+
+  end
+
   private
 
   def movie_params
