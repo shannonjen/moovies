@@ -1,24 +1,53 @@
-# README
+# Building a Rails API with Token Based Authentication
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+In this class example, we created a single resource (Movie) Rails API using jBuilder. We added a User model for authentication. Upon creating a User, a unique authentication token is generated. This token must be submitted along with any request.
 
-Things you may want to cover:
+1. Remove CSRF Token Requirement from the ApplicationController
 
-* Ruby version
+```ruby
+# app/controllers/application_controller
+class ApplicationController < ActionController::Base
+  protect_from_forgery with: :null_session
+end
+```
 
-* System dependencies
+2. Generate User model/users table with token attribute/column   
 
-* Configuration
+3. Add methods to generate and set this token in the User model
 
-* Database creation
+```ruby
+class User < ApplicationRecord
+  before_create :set_auth_token
 
-* Database initialization
+  private
+    def set_auth_token
+      return if auth_token.present?
+      self.auth_token = generate_auth_token
+    end
 
-* How to run the test suite
+    def generate_auth_token
+      loop do
+        token = SecureRandom.hex
+        break token unless self.class.exists?(auth_token: token)
+      end
+    end
+end
 
-* Services (job queues, cache servers, search engines, etc.)
+```
+4. Add authenticate method to the Movie controller
 
-* Deployment instructions
+```ruby
+before_action :authenticate
 
-* ...
+def authenticate
+  authenticate_or_request_with_http_token do |token, options|
+    User.find_by(auth_token: token)
+  end
+
+end
+```
+5. Use Postman or cURL to add the token to the header
+
+```bash
+$ curl -IH "Authorization: Token token=1e07686a296e039413dc87d5fe4e3503" http://localhost:3000/movies
+```
