@@ -34,6 +34,7 @@ class User < ApplicationRecord
 end
 
 ```
+
 4. Add authenticate method to the Movie controller
 
 ```ruby
@@ -46,6 +47,7 @@ def authenticate
 
 end
 ```
+
 5. Use Postman or cURL to add the token to the header
 
 ```bash
