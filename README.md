@@ -18,13 +18,11 @@ end
 ```ruby
 class User < ApplicationRecord
   before_create :set_auth_token
-
   private
     def set_auth_token
       return if auth_token.present?
       self.auth_token = generate_auth_token
     end
-
     def generate_auth_token
       loop do
         token = SecureRandom.hex
@@ -32,19 +30,16 @@ class User < ApplicationRecord
       end
     end
 end
-
 ```
 
 4. Add authenticate method to the Movie controller
 
 ```ruby
 before_action :authenticate
-
 def authenticate
   authenticate_or_request_with_http_token do |token, options|
     User.find_by(auth_token: token)
   end
-
 end
 ```
 
