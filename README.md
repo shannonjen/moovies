@@ -3,18 +3,14 @@
 In this class example, we created a single resource (Movie) Rails API using jBuilder. We added a User model for authentication. Upon creating a User, a unique authentication token is generated. This token must be submitted along with any request.
 
 1. Remove CSRF Token Requirement from the ApplicationController
-
 ```ruby
 # app/controllers/application_controller
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 end
 ```
-
 2. Generate User model/users table with token attribute/column   
-
 3. Add methods to generate and set this token in the User model
-
 ```ruby
 class User < ApplicationRecord
   before_create :set_auth_token
@@ -31,9 +27,7 @@ class User < ApplicationRecord
     end
 end
 ```
-
 4. Add authenticate method to the Movie controller
-
 ```ruby
 before_action :authenticate
 def authenticate
@@ -42,9 +36,7 @@ def authenticate
   end
 end
 ```
-
 5. Use Postman or cURL to add the token to the header
-
 ```bash
 $ curl -IH "Authorization: Token token=1e07686a296e039413dc87d5fe4e3503" http://localhost:3000/movies
 ```
